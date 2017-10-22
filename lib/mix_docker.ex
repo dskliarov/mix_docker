@@ -43,6 +43,22 @@ defmodule MixDocker do
     Mix.shell.info "  docker run -it --rm #{image(:release)} foreground"
   end
 
+  def copy(args) do
+    app     = app_name()
+    version = app_version() || release_version()
+
+    cid = "mix_docker-#{:rand.uniform(1000000)}"
+
+    with_dockerfile @dockerfile_release, fn ->
+      docker :rm, cid
+      docker :create, cid, image(:build)
+      docker :cp, cid, "/opt/app/_build/prod/rel/#{app}/releases/#{version}/#{app}.tar.gz", "#{app}.tar.gz"
+      docker :rm, cid
+    end
+
+    Mix.shell.info "Release #{app}.tar.gz has been copied to the local file system"
+  end
+
   def publish(args) do
     {opts, args} = extract_opts(args)
     publish(args, opts)

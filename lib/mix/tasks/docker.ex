@@ -64,6 +64,25 @@ defmodule Mix.Tasks.Docker.Release do
   defdelegate run(args), to: MixDocker, as: :release
 end
 
+defmodule Mix.Tasks.Docker.Copy do
+  use Mix.Task
+
+  @shortdoc "Copy release from build image to the local folder"
+  @preferred_cli_env :prod
+  @moduledoc """
+  Copy release tar file from build image to the local folder
+  Any arguments and options will be passed directly to
+  `docker cp` command.
+
+  ## Examples
+
+  # Build minimal container
+  mix docker.copy
+
+  """
+  defdelegate run(args), to: MixDocker, as: :copy
+end
+
 defmodule Mix.Tasks.Docker.Publish do
   use Mix.Task
 
